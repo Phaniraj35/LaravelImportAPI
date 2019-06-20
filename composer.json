@@ -1,0 +1,20 @@
+{
+    "name": "ladybird/streamimport",
+    "require": {
+        "doctrine/dbal": "^2.9",
+        "rodenastyle/stream-parser": "^1.2"
+    },
+    "authors": [
+        {
+            "name": "Phaniraj35",
+            "email": "phaniitng@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ladybird\\StreamImport\\ImportServiceProvider"
+            ]
+        }
+    }
+}
