@@ -15,7 +15,7 @@ class ImportController extends Controller
 
     //private $file_path="file.json";
     private $model;
-    protected $saved_file='file.json';
+    protected $saved_file = 'file.json';
 
     public function getDbCols($source)
     {
@@ -25,16 +25,16 @@ class ImportController extends Controller
         $this->model = $factory->make($source);
 
         
-        if(empty($this->model->getHidden())) {
+        if (empty($this->model->getHidden())) {
             return array_unique($this->model->getFillable());
         } else {
-            return(array_unique(array_merge($this->model->getFillable(),$this->model->getHidden())));
+            return(array_unique(array_merge($this->model->getFillable(), $this->model->getHidden())));
         }
     }
 
 
 
-    public function parseImport($source,Request $request)
+    public function parseImport($source, Request $request)
     {
         
 
@@ -47,16 +47,16 @@ class ImportController extends Controller
         $path = $request->file('csv_file')->getRealPath();
  
         
-        $data = array_map('str_getcsv',file($path));
+        $data = array_map('str_getcsv', file($path));
         
-        if($request->has('header')) {
+        if ($request->has('header')) {
             array_shift($data);
         }
 
         
         //dd($this);
 
-        Storage::disk('local')->put($this->saved_file,json_encode($data));
+        Storage::disk('local')->put($this->saved_file, json_encode($data));
 
             
 
@@ -77,7 +77,7 @@ class ImportController extends Controller
         
     }
 
-    public function processImport(Request $request,$source)
+    public function processImport(Request $request, $source)
     {
         
         
@@ -93,16 +93,16 @@ class ImportController extends Controller
         $tempArray = array();
         $final_json_array = array();
         $temp_file_contents = Storage::disk('local')->get($this->saved_file);
-        $temp_file_contents = json_decode($temp_file_contents,true);
+        $temp_file_contents = json_decode($temp_file_contents, true);
         
 
         
 
         
 
-        foreach($temp_file_contents as $row) {
+        foreach ($temp_file_contents as $row) {
 
-            foreach($request->fields as $key => $value) {
+            foreach ($request->fields as $key => $value) {
 
                 $tempArray[$value] = $row[$key];
 
@@ -113,15 +113,15 @@ class ImportController extends Controller
 
             ksort($tempArray);
 
-            foreach($tempArray as $key => $value) {
-                if(in_array(str_replace("_id","",$key),array_keys($relations))) {
-                    $relationForThisKey = $relations[str_replace("_id","",$key)];
+            foreach ($tempArray as $key => $value) {
+                if (in_array(str_replace("_id", "", $key), array_keys($relations))) {
+                    $relationForThisKey = $relations[str_replace("_id", "", $key)];
                     $relationModel = new $relationForThisKey['model']();
                     
                     $relationColumns = $relationModel->getConnection()->getSchemaBuilder()->getColumnListing($relationModel->getTable());
-                    $searchData = $relationModel->whereLike(array_values($relationColumns),$value)->get();
+                    $searchData = $relationModel->whereLike(array_values($relationColumns), $value)->get();
 
-                    foreach($searchData as $data)
+                    foreach ($searchData as $data)
                         $replace = $data->id;
                     $tempArray[$key] = $replace;
                     
@@ -133,10 +133,10 @@ class ImportController extends Controller
                 
             //dd();    
 
-            if(empty($headers))
+            if (empty($headers))
                 $headers = array_keys($tempArray);
 
-            array_push($final_json_array,$tempArray);
+            array_push($final_json_array, $tempArray);
             $tempArray = array();
 
         } //foreach
@@ -145,13 +145,13 @@ class ImportController extends Controller
         
         
  
-        foreach(array_chunk($final_json_array,1000) as $t) {
+        foreach (array_chunk($final_json_array, 1000) as $t) {
             
-            for($i=0;$i<1000;$i++) {
+            for ($i = 0; $i<1000; $i++) {
                 dump($t[$i]);
-                $validator = Validator::make($t[$i],$this->model->rules);
+                $validator = Validator::make($t[$i], $this->model->rules);
 
-                if($validator->fails()) 
+                if ($validator->fails()) 
                     return response()->json($validator->messages()->getMessages(), 200);
                 else {
                     $this->model::insert($t[$i]);
@@ -163,7 +163,7 @@ class ImportController extends Controller
         } //foreach
 
         
-        return response()->json(["message" => "Successfully Inserted"], 200);;
+        return response()->json(["message" => "Successfully Inserted"], 200); ;
         
     }
 

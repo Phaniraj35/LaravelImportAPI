@@ -31,8 +31,8 @@ class ImportServiceProvider extends ServiceProvider
             __DIR__."/config/import.php" => config_path('import.php')
         ]);
 
-        Builder::macro('whereLike', function ($attributes, string $searchTerm) {
-            $this->where(function (Builder $query) use ($attributes, $searchTerm) {
+        Builder::macro('whereLike', function($attributes, string $searchTerm) {
+            $this->where(function(Builder $query) use ($attributes, $searchTerm) {
                 foreach (array_wrap($attributes) as $attribute) {
                     $query->orWhere($attribute, '=', $searchTerm);
                 }

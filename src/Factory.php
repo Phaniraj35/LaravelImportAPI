@@ -14,7 +14,7 @@ class Factory
     {
         $name = $this->namespace."\\".$source;
 
-        if(class_exists($name)) {
+        if (class_exists($name)) {
             return new $name();
         }
 
