@@ -2,8 +2,8 @@
 
 namespace LadyBird\StreamImport;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\ServiceProvider;
 
 class ImportServiceProvider extends ServiceProvider
 {
@@ -14,7 +14,6 @@ class ImportServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        
     }
 
     /**
@@ -24,11 +23,10 @@ class ImportServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
 
         $this->publishes([
-            __DIR__."/config/import.php" => config_path('import.php')
+            __DIR__.'/config/import.php' => config_path('import.php'),
         ]);
 
         Builder::macro('whereLike', function ($attributes, string $searchTerm) {
@@ -37,7 +35,7 @@ class ImportServiceProvider extends ServiceProvider
                     $query->orWhere($attribute, '=', $searchTerm);
                 }
             });
-        
+
             return $this;
         });
     }
