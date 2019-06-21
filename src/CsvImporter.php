@@ -2,15 +2,15 @@
 
 namespace LadyBird\StreamImport;
 
-
 use DB;
 
 class CsvImporter
 {
     /**
-     * Import method used for saving file and importing it using a database query
-     * 
+     * Import method used for saving file and importing it using a database query.
+     *
      * @param Symfony\Component\HttpFoundation\File\UploadedFile $csv_import
+     *
      * @return int number of lines imported
      */
     public function import($csv_import, $table)
@@ -27,9 +27,10 @@ class CsvImporter
 
     /**
      * Move File to a temporary storage directory for processing
-     * temporary directory must have 0755 permissions in order to be processed
+     * temporary directory must have 0755 permissions in order to be processed.
      *
      * @param Symfony\Component\HttpFoundation\File\UploadedFile $csv_import
+     *
      * @return Symfony\Component\HttpFoundation\File $moved_file
      */
     public function moveFile($csv_import)
@@ -51,9 +52,10 @@ class CsvImporter
     /**
      * Convert file line endings to uniform "\r\n" to solve for EOL issues
      * Files that are created on different platforms use different EOL characters
-     * This method will convert all line endings to Unix uniform
+     * This method will convert all line endings to Unix uniform.
      *
      * @param string $file_path
+     *
      * @return string $file_path
      */
     public function normalize($file_path)
@@ -74,11 +76,12 @@ class CsvImporter
     }
 
     /**
-     * Import CSV file into Database using LOAD DATA LOCAL INFILE function
+     * Import CSV file into Database using LOAD DATA LOCAL INFILE function.
      *
      * NOTE: PDO settings must have attribute PDO::MYSQL_ATTR_LOCAL_INFILE => true
      *
      * @param $file_path
+     *
      * @return mixed Will return number of lines imported by the query
      */
     private function importFileContents($file_path, $table)
@@ -91,4 +94,3 @@ class CsvImporter
         return DB::connection()->getpdo()->exec($query);
     }
 }
-?>
