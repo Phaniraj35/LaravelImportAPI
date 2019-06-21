@@ -18,6 +18,10 @@ class ImportController extends Controller
     {
         $factory = new Factory();
         $this->model = $factory->make($source);
+        
+        if(is_null($this->model) || empty($this->model)) {
+            return;
+        }
 
         if (empty($this->model->getHidden())) {
             return array_unique($this->model->getFillable());
@@ -46,13 +50,19 @@ class ImportController extends Controller
 
         Storage::disk('local')->put($this->saved_file, json_encode($data));
 
-        //$csv_data = $data[0];
+        
         $db_cols = $this->getDbCols($source);
+        
+        if(is_null($db_cols) || empty($db_cols)) {
+            
+            return response()->json(["message" => "No Such Model Found In Application"],404);
+        
+        }
 
         $returnArray['csv_sample_row'] = ($data[0]);
         $returnArray['database_columns'] = array_unique($db_cols);
 
-        //return json_encode($data[0]);
+        
 
         return response()->json($returnArray, 200);
     }
@@ -64,7 +74,7 @@ class ImportController extends Controller
 
         $relations = $this->model->relationships();
 
-        //dd($relations);
+        
 
         $tempArray = [];
         $final_json_array = [];
@@ -104,8 +114,8 @@ class ImportController extends Controller
         } //foreach
 
         foreach (array_chunk($final_json_array, 1000) as $t) {
-            for ($i = 0; $i < 1000; $i++) {
-                dump($t[$i]);
+            for ($i = 0; $i < count($t); $i++) {
+                
                 $validator = Validator::make($t[$i], $this->model->rules);
 
                 if ($validator->fails()) {
