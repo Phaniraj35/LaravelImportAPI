@@ -104,7 +104,7 @@ class ImportController extends Controller
         } //foreach
 
         foreach (array_chunk($final_json_array, 1000) as $t) {
-            for ($i = 0; $i<1000; $i++) {
+            for ($i = 0; $i < 1000; $i++) {
                 dump($t[$i]);
                 $validator = Validator::make($t[$i], $this->model->rules);
 
