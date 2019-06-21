@@ -1,8 +1,7 @@
 {
     "name": "ladybird/streamimport",
     "require": {
-        "doctrine/dbal": "^2.9",
-        "rodenastyle/stream-parser": "^1.2"
+        
     },
     "authors": [
         {
