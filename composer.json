@@ -13,8 +13,22 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Ladybird\\StreamImport\\ImportServiceProvider"
+                "LadyBird\\StreamImport\\ImportServiceProvider"
             ]
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^3.5"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "LadyBird\\StreamImport\\" : "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LadyBird\\StreamImport\\Tests\\" : "tests/"
         }
     }
 }
